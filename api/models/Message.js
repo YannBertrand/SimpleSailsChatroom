@@ -7,7 +7,15 @@
 
 module.exports = {
 
+  schema: true,
+
   attributes: {
+
+    content: {
+      type: 'text',
+      required: true,
+      minLength: 3,
+    },
 
   }
 };
