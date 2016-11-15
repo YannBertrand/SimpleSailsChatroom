@@ -24,7 +24,7 @@ module.exports = {
     },
 
     messages: {
-      collection: 'message',
+      collection: 'msg',
       via: 'user',
     },
 

@@ -25,24 +25,27 @@ function launchChatroom(currentUser) {
   var $message = $('input#message');
 
   var messagesTemplate = new EJS({ url: '/templates/messages.ejs' });
-  var messageTemplate = new EJS({ url: '/templates/message.ejs' });
   var usersTemplate = new EJS({ url: '/templates/users.ejs' });
-  var userTemplate = new EJS({ url: '/templates/user.ejs' });
+
+  var users = [];
+  var messages = [];
 
   // Subscribe to the messages
-  io.socket.get('/message', function (messages) {
-    $messagesList.html(messagesTemplate.render({ messages: messages }));
+  io.socket.get('/msg', function (_messages) {
+    messages = _messages;
+    updateMessagesTemplate();
   });
 
   // Subscribe to the users
   io.socket.get('/user?isOnline=true', function (onlineUsers) {
-    $onlineUsers.html(usersTemplate.render({ onlineUsers: onlineUsers }));
+    users = onlineUsers;
+    updateUsersTemplate();
   });
 
   // Create a message on submit
   $('form#message-form').on('submit', function () {
     var message = $message.val();
-    io.socket.post('/message', { user: currentUser, content: message });
+    io.socket.post('/msg', { user: currentUser, content: message });
     $message.val('');
 
     return false;
@@ -51,11 +54,28 @@ function launchChatroom(currentUser) {
   // When there is a creation/update of a user
   io.socket.on('user', function (event) {
     if (event.verb === 'created') {
-      $onlineUsers.append(userTemplate.render({ user: event.data }));
+      users.push(event.data);
+      updateUsersTemplate();
+    }
+  });
+
+  // When there is a creation/update of a message
+  io.socket.on('msg', function (event) {
+    if (event.verb === 'created') {
+      messages.push(event.data);
+      updateMessagesTemplate();
     }
   });
 
   // Enable the message input and submit button
   $message.prop('disabled', false).focus();
   $('button#send-message').prop('disabled', false);
+
+  function updateMessagesTemplate() {
+    $messagesList.html(messagesTemplate.render({ messages: messages }));
+  }
+
+  function updateUsersTemplate() {
+    $onlineUsers.html(usersTemplate.render({ 'onlineUsers': users }));
+  }
 }
