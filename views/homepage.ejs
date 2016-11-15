@@ -5,6 +5,8 @@
 
     <div id="messages" class="col-sm-8">
       <h4>Messages</h4>
+
+      <div id="messages-list"></div>
     </div>
 
     <aside id="users" class="col-sm-4 hidden-xs">
@@ -18,9 +20,9 @@
   <form id="message-form" class="form-inline">
     <div class="form-group">
       <label class="sr-only" for="message">My message</label>
-      <input id="message" type="text" class="form-control" placeholder="My message" required minlength="3" autofocus>
+      <input id="message" type="text" class="form-control" placeholder="My message" required minlength="3" autofocus disabled>
 
-      <button id="send-message" type="submit" class="btn btn-primary">Send</button>
+      <button id="send-message" type="submit" class="btn btn-primary" disabled>Send</button>
     </div>
   </form>
 </div>

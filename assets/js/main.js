@@ -22,4 +22,7 @@ function launchChatroom(currentUser) {
   io.socket.get('/user?isOnline=true', function (onlineUsers) {
     $('#online-users').html(usersTemplate.render({ onlineUsers: onlineUsers }));
   });
+
+  $('input#message').prop('disabled', false).focus();
+  $('button#send-message').prop('disabled', false);
 }
