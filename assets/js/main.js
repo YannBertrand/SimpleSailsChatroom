@@ -17,7 +17,13 @@ $(document).ready(function () {
 });
 
 function launchChatroom(currentUser) {
-  var usersTemplate = new EJS('../templates/users.ejs');
+  var messagesTemplate = new EJS({ url: '/templates/messages.ejs' });
+  var usersTemplate = new EJS({ url: '/templates/users.ejs' });
+
+  io.socket.get('/message', function (messages) {
+    console.log(messages);
+    $('#messages-list').html(messagesTemplate.render({ messages: messages }));
+  });
 
   io.socket.get('/user?isOnline=true', function (onlineUsers) {
     $('#online-users').html(usersTemplate.render({ onlineUsers: onlineUsers }));
