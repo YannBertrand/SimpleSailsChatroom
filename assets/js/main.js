@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $('form').on('submit', function () {
+  $('form#login-form').on('submit', function () {
     var userName = $('input#user-name').val();
     io.socket.post('/user', { name: userName }, function (user, jwres) {
       $('#login-modal').modal('hide');
