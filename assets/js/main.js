@@ -5,6 +5,7 @@ $(document).ready(function () {
     var userName = $('input#user-name').val();
     io.socket.post('/user', { name: userName }, function (user, jwres) {
       currentUser = user;
+      $('#login-modal').modal('hide');
     });
 
     return false;
