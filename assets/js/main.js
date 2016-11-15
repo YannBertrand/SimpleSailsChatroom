@@ -1,11 +1,10 @@
 $(document).ready(function () {
-  var currentUser = {};
-
   $('form').on('submit', function () {
     var userName = $('input#user-name').val();
     io.socket.post('/user', { name: userName }, function (user, jwres) {
-      currentUser = user;
       $('#login-modal').modal('hide');
+
+      launchChatroom(user);
     });
 
     return false;
@@ -16,3 +15,11 @@ $(document).ready(function () {
     keyboard: false,
   });
 });
+
+function launchChatroom(currentUser) {
+  var usersTemplate = new EJS('../templates/users.ejs');
+
+  io.socket.get('/user?isOnline=true', function (onlineUsers) {
+    $('#online-users').html(usersTemplate.render({ onlineUsers: onlineUsers }));
+  });
+}
