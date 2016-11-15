@@ -18,6 +18,11 @@ module.exports = {
       minLength: 3,
     },
 
+    isOnline: {
+      type: 'boolean',
+      defaultsTo: true,
+    },
+
     messages: {
       collection: 'message',
       via: 'user',
