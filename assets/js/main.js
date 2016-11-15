@@ -37,8 +37,8 @@ function launchChatroom(currentUser) {
   });
 
   // Subscribe to the users
-  io.socket.get('/user?isOnline=true', function (onlineUsers) {
-    users = onlineUsers;
+  io.socket.get('/user', function (_users) {
+    users = _users;
     updateUsersTemplate();
   });
 
@@ -62,7 +62,11 @@ function launchChatroom(currentUser) {
   // When there is a creation/update of a message
   io.socket.on('msg', function (event) {
     if (event.verb === 'created') {
-      messages.push(event.data);
+      // Hydrate the user (to display its name)
+      var message = event.data;
+      message.user = users[_.findLastIndex(users, { id: message.user })];
+
+      messages.push(message);
       updateMessagesTemplate();
     }
   });
