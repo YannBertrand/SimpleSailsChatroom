@@ -18,6 +18,11 @@ module.exports = {
       minLength: 3,
     },
 
+    messages: {
+      collection: 'message',
+      via: 'user',
+    },
+
   }
 
 };

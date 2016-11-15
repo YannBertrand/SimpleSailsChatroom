@@ -11,6 +11,12 @@ module.exports = {
 
   attributes: {
 
+    user: {
+      model: 'user',
+      notEmpty: true,
+      required: true,
+    },
+
     content: {
       type: 'text',
       required: true,
