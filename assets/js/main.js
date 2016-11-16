@@ -29,7 +29,7 @@ function launchChatroom(currentUser) {
   var messagesTemplate = new EJS({ url: '/templates/messages.ejs' });
   var usersTemplate = new EJS({ url: '/templates/users.ejs' });
 
-  var users = [];
+  var users = {};
   var messages = [];
 
   // Subscribe to the messages
@@ -40,7 +40,8 @@ function launchChatroom(currentUser) {
 
   // Subscribe to the users
   io.socket.get('/user', function (_users) {
-    users = _users;
+    users = _.keyBy(_users, 'id');
+
     updateUsersTemplate();
   });
 
@@ -70,9 +71,12 @@ function launchChatroom(currentUser) {
   // When there is a creation/update of a user
   io.socket.on('user', function (event) {
     if (event.verb === 'created') {
-      users.push(event.data);
-      updateUsersTemplate();
+      users[event.id] = event.data;
+    } else if (event.verb === 'updated') {
+      users[event.id].isOnline = event.data.isOnline;
     }
+
+    updateUsersTemplate();
   });
 
   // When there is a creation/update of a message
@@ -80,7 +84,7 @@ function launchChatroom(currentUser) {
     if (event.verb === 'created') {
       // Hydrate the user (to display its name)
       var message = event.data;
-      message.user = users[_.findLastIndex(users, { id: message.user })];
+      message.user = users[message.user];
 
       messages.push(message);
       updateMessagesTemplate();
@@ -97,6 +101,6 @@ function launchChatroom(currentUser) {
   }
 
   function updateUsersTemplate() {
-    $onlineUsers.html(usersTemplate.render({ 'onlineUsers': users }));
+    $onlineUsers.html(usersTemplate.render({ 'onlineUsers': _.filter(users, { isOnline: true }) }));
   }
 }

@@ -18,6 +18,8 @@ module.exports = {
         if (err)
           return res.serverError();
 
+        User.publishUpdate(user.id, { isOnline: false });
+
         return res.ok();
       });
     });
