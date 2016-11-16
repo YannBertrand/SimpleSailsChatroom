@@ -5,7 +5,7 @@ $(document).ready(function () {
   $('form#login-form').on('submit', function () {
     var userName = $('input#user-name').val();
 
-    io.socket.post('/user', { name: userName }, function (user, jwres) {
+    io.socket.post('/user/logInOrCreate', { name: userName }, function (user, jwres) {
       $('#login-modal').modal('hide');
 
       launchChatroom(user);
@@ -73,7 +73,7 @@ function launchChatroom(currentUser) {
     if (event.verb === 'created') {
       users[event.id] = event.data;
     } else if (event.verb === 'updated') {
-      users[event.id].isOnline = event.data.isOnline;
+      users[event.id] = event.data;
     }
 
     updateUsersTemplate();
