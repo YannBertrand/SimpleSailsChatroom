@@ -44,6 +44,14 @@ function launchChatroom(currentUser) {
     updateUsersTemplate();
   });
 
+  $(window).on('beforeunload', function () {
+    $.post({
+      url: '/user/disconnect',
+      data: { userId: currentUser },
+      async: false,
+    });
+  });
+
   // Create a message on submit
   $('form#message-form').on('submit', function () {
     var message = $message.val();
