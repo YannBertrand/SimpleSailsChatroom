@@ -14,6 +14,7 @@ module.exports = {
     name: {
       type: 'string',
       required: true,
+      unique: true,
       alphanumericdashed: true,
       minLength: 3,
     },
