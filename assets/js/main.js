@@ -1,3 +1,5 @@
+var NUMBER_OF_MESSAGES_TO_DISPLAY = 10;
+
 $(document).ready(function () {
   // Create a user on submit (using websockets)
   $('form#login-form').on('submit', function () {
@@ -48,6 +50,12 @@ function launchChatroom(currentUser) {
     io.socket.post('/msg', { user: currentUser, content: message });
     $message.val('');
 
+    messages.push({
+      user: currentUser,
+      content: message,
+    });
+    updateMessagesTemplate();
+
     return false;
   });
 
@@ -76,6 +84,7 @@ function launchChatroom(currentUser) {
   $('button#send-message').prop('disabled', false);
 
   function updateMessagesTemplate() {
+    messages = _.takeRight(messages, NUMBER_OF_MESSAGES_TO_DISPLAY);
     $messagesList.html(messagesTemplate.render({ messages: messages }));
   }
 
